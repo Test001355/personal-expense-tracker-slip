@@ -1,0 +1,196 @@
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+<meta charset="utf-8">
+<title>รายงานฉบับสมบูรณ์ - Personal Expense Tracker Web App with Slip-Based Input</title>
+<style>
+  body {
+    font-family: 'TH Sarabun New', 'Sarabun', 'Prompt', 'Cordia New', sans-serif;
+    font-size: 16pt;
+    line-height: 1.5;
+    color: #111827;
+    margin: 1in;
+  }
+  h1 { font-size: 22pt; font-weight: bold; color: #1e3a8a; text-align: center; margin-bottom: 6pt; }
+  h2 { font-size: 18pt; font-weight: bold; color: #1e40af; border-bottom: 1.5px solid #93c5fd; padding-bottom: 4pt; margin-top: 18pt; }
+  h3 { font-size: 16pt; font-weight: bold; color: #1f2937; margin-top: 12pt; }
+  table { width: 100%; border-collapse: collapse; margin: 10pt 0; font-size: 14pt; }
+  th, td { border: 1px solid #9ca3af; padding: 6pt 8pt; text-align: left; }
+  th { background-color: #eff6ff; font-weight: bold; }
+  .center { text-align: center; }
+  .box { background-color: #f8fafc; border: 1px solid #cbd5e1; padding: 10pt; margin: 10pt 0; }
+</style>
+</head>
+<body>
+
+<h1>รายงานฉบับสมบูรณ์ (Complete Project Report)</h1>
+<p class="center"><strong>ชื่อโปรเจกต์: Personal Expense Tracker Web App with Slip-Based Input</strong><br>
+(ระบบบันทึกรายรับ–รายจ่ายส่วนบุคคล พร้อมอัปโหลดสลิปเพื่อช่วยบันทึกข้อมูลค่าใช้จ่าย)</p>
+
+<div class="box">
+  <strong>ข้อมูลการส่งงาน (Project Deliverables):</strong><br>
+  • <strong>GitHub Repository URL:</strong> <a href="https://github.com/Test001355/personal-expense-tracker-slip">https://github.com/Test001355/personal-expense-tracker-slip</a><br>
+  • <strong>Demo URL (ใช้งานจริงผ่านเว็บ):</strong> <a href="https://test001355.github.io/personal-expense-tracker-slip/">https://test001355.github.io/personal-expense-tracker-slip/</a>
+</div>
+
+<h2>1. ภาพรวมและแนวคิดของระบบ (System Overview)</h2>
+<p>ระบบ <strong>Personal Expense Tracker Web App with Slip-Based Input (SlipTrack)</strong> เป็นเว็บแอปพลิเคชันสำหรับบันทึกและติดตามรายรับ–รายจ่ายส่วนบุคคล โดยออกแบบให้ผู้ใช้งานสามารถเพิ่มรายการรายรับ–รายจ่ายได้ 2 วิธีหลัก ได้แก่:</p>
+<ol>
+  <li><strong>กรอกข้อมูลด้วยตนเอง (Manual Input):</strong> ผู้ใช้กรอกประเภท (รายรับ/รายจ่าย) จำนวนเงิน วันที่ ชื่อร้านค้า หมวดหมู่ และรายละเอียดด้วยตนเอง</li>
+  <li><strong>อัปโหลดรูปภาพสลิปโอนเงินหรือสลิปจ่ายเงิน (Slip-Based Input):</strong> ผู้ใช้อัปโหลดรูปสลิปเข้าสู่ระบบ ระบบจะแสดงภาพตัวอย่างสลิปควบคู่กับฟอร์มกรอกข้อมูล พร้อมระบบแนะนำหมวดหมู่ค่าใช้จ่ายแบบง่ายจากคำสำคัญ (Rule-Based Keyword Suggestion) เช่น เมื่อพิมพ์คำว่า "7-Eleven" ระบบจะแนะนำและเลือกหมวดหมู่ "อาหารและเครื่องดื่ม" ให้อัตโนมัติ</li>
+</ol>
+<p>ข้อมูลทั้งหมดรวมถึงรูปภาพสลิปจะถูกจัดเก็บในระบบ พร้อมแสดงผลสรุปในหน้า Dashboard และกราฟสรุปค่าใช้จ่ายแยกตามหมวดหมู่</p>
+
+<h2>2. วัตถุประสงค์ของระบบ (Objectives)</h2>
+<ol>
+  <li>เพื่อพัฒนาเว็บแอปพลิเคชันสำหรับบันทึกรายรับ–รายจ่ายส่วนบุคคล</li>
+  <li>เพื่อให้ผู้ใช้สามารถบันทึกรายการค่าใช้จ่ายควบคู่กับหลักฐานรูปภาพสลิปได้</li>
+  <li>เพื่อฝึกการพัฒนาระบบ CRUD (เพิ่ม/อ่าน/แก้ไข/ลบ), File Upload, Search, Filter และ Dashboard</li>
+  <li>เพื่อฝึกการออกแบบโครงสร้างฐานข้อมูลและการจัดเก็บรูปภาพประกอบรายการธุรกรรม</li>
+  <li>เพื่อประยุกต์ใช้ AI Tools ช่วยในการออกแบบ พัฒนา แก้ไขโค้ด และจัดทำเอกสารประกอบโปรเจกต์</li>
+</ol>
+
+<h2>3. กลุ่มผู้ใช้งาน (Target Users)</h2>
+<ol>
+  <li><strong>นักศึกษา:</strong> ที่ต้องการบริหารจัดการรายรับ–รายจ่ายรายเดือน</li>
+  <li><strong>บุคคลทั่วไป:</strong> ที่ต้องการติดตามค่าใช้จ่ายส่วนตัวในชีวิตประจำวัน</li>
+  <li><strong>ผู้ใช้ที่ต้องการเก็บหลักฐานสลิป:</strong> ผู้ที่ต้องการเก็บรูปภาพสลิปโอนเงินหรือใบเสร็จควบคู่กับรายการรายจ่ายเพื่อตรวจสอบย้อนหลัง</li>
+</ol>
+
+<h2>4. ขอบเขตของระบบและฟีเจอร์ที่พัฒนา (System Scope & Features)</h2>
+<h3>4.1 ขอบเขตหลัก (Core MVP Scope)</h3>
+<ol>
+  <li>เพิ่มรายการรายรับ–รายจ่ายด้วยตนเอง</li>
+  <li>อัปโหลดรูปภาพสลิปประกอบรายการรายจ่าย พร้อมแสดงตัวอย่างรูปสลิป</li>
+  <li>แก้ไขข้อมูลรายการรายรับ–รายจ่าย</li>
+  <li>ลบรายการรายรับ–รายจ่าย</li>
+  <li>แสดงรายการรายรับ–รายจ่ายทั้งหมด (สลับมุมมองตาราง Table และการ์ด Card ได้)</li>
+  <li>ค้นหาจากคำสำคัญ และกรองรายการตามประเภท หมวดหมู่ หรือช่วงวันที่</li>
+  <li>แสดง Dashboard สรุปรายรับ รายจ่าย และยอดคงเหลือสุทธิ</li>
+  <li>แสดงกราฟสรุปรายจ่ายตามหมวดหมู่ (Pie/Doughnut Chart และ Bar Chart)</li>
+  <li>แนะนำหมวดหมู่ค่าใช้จ่ายแบบง่ายจากคำสำคัญ (Rule-Based)</li>
+  <li>Deploy ระบบให้สามารถใช้งานผ่าน URL สาธารณะได้จริง (GitHub Pages)</li>
+</ol>
+
+<h3>4.2 ฟีเจอร์เสริมที่ได้พัฒนาเพิ่มเติม (Optional Advanced Features)</h3>
+<ol>
+  <li><strong>Export รายงานเป็นไฟล์ CSV:</strong> ดาวน์โหลดข้อมูลธุรกรรมทั้งหมดไปเปิดในโปรแกรม Microsoft Excel ได้ทันที</li>
+  <li><strong>ตั้งงบประมาณรายเดือนและแจ้งเตือนเมื่อใช้เกินงบ:</strong> กำหนดงบรายจ่ายต่อเดือน พร้อมแถบสถานะและข้อความแจ้งเตือนเมื่อใช้จ่ายเกินงบ</li>
+  <li><strong>โหมดมืด/สว่าง (Dark Mode / Light Mode):</strong> ปรับเปลี่ยนธีมสีของหน้าเว็บได้ตามต้องการ</li>
+  <li><strong>การจัดการหมวดหมู่เพิ่มเติม:</strong> สามารถเพิ่มหมวดหมู่ใหม่นอกเหนือจากหมวดหมู่เริ่มต้น 9 หมวดหมู่ได้</li>
+</ol>
+
+<h2>5. ความต้องการเชิงฟังก์ชันและไม่ใช่เชิงฟังก์ชัน (Requirements)</h2>
+<h3>5.1 Functional Requirements</h3>
+<table>
+  <thead>
+    <tr>
+      <th>รหัส</th>
+      <th>รายการความต้องการ</th>
+      <th>รายละเอียดการทำงาน</th>
+      <th>สถานะ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>FR-01</td><td>เพิ่มรายการรายรับ–รายจ่าย</td><td>ผู้ใช้กรอกวันที่ ประเภท จำนวนเงิน ร้านค้า หมวดหมู่ วิธีชำระเงิน และรายละเอียดได้</td><td>สำเร็จ</td></tr>
+    <tr><td>FR-02</td><td>อัปโหลดสลิป</td><td>ผู้ใช้อัปโหลดรูปภาพสลิปประกอบรายการรายจ่าย พร้อมแสดงภาพตัวอย่างสลิป</td><td>สำเร็จ</td></tr>
+    <tr><td>FR-03</td><td>บันทึกข้อมูลจากสลิป</td><td>หลังอัปโหลดสลิป ผู้ใช้กรอกจำนวนเงิน วันที่ ร้านค้า/ผู้รับเงิน และรายละเอียดเพิ่มเติมได้</td><td>สำเร็จ</td></tr>
+    <tr><td>FR-04</td><td>แก้ไขรายการ</td><td>ผู้ใช้แก้ไขข้อมูลรายการและรูปสลิปที่บันทึกไว้ได้ผ่านหน้าต่าง Modal</td><td>สำเร็จ</td></tr>
+    <tr><td>FR-05</td><td>ลบรายการ</td><td>ผู้ใช้ลบรายการที่ไม่ต้องการได้ พร้อมระบบยืนยันก่อนลบ</td><td>สำเร็จ</td></tr>
+    <tr><td>FR-06</td><td>แสดงรายการทั้งหมด</td><td>แสดงรายการรายรับ–รายจ่ายทั้งหมดในรูปแบบตาราง (Table) หรือการ์ด (Card)</td><td>สำเร็จ</td></tr>
+    <tr><td>FR-07</td><td>ค้นหาและกรองข้อมูล</td><td>ค้นหาจากคำสำคัญ และกรองตามประเภท หมวดหมู่ หรือช่วงวันที่ได้</td><td>สำเร็จ</td></tr>
+    <tr><td>FR-08</td><td>แนะนำหมวดหมู่</td><td>แนะนำหมวดหมู่อัตโนมัติจากคำสำคัญ เช่น 7-Eleven, Grab, Shopee</td><td>สำเร็จ</td></tr>
+    <tr><td>FR-09</td><td>Dashboard</td><td>แสดงยอดรวมรายรับ รายจ่าย และยอดคงเหลือสุทธิอย่างถูกต้อง</td><td>สำเร็จ</td></tr>
+    <tr><td>FR-10</td><td>กราฟสรุปค่าใช้จ่าย</td><td>แสดงกราฟรายจ่ายตามหมวดหมู่ทั้งแบบ Pie Chart และ Bar Chart ด้วย Chart.js</td><td>สำเร็จ</td></tr>
+    <tr><td>FR-11</td><td>จัดเก็บข้อมูล</td><td>จัดเก็บข้อมูลธุรกรรม หมวดหมู่ และรูปภาพสลิปใน LocalStorage</td><td>สำเร็จ</td></tr>
+    <tr><td>FR-12</td><td>Deploy ระบบ</td><td>เปิดใช้งานผ่าน URL สาธารณะบน GitHub Pages ได้จริง</td><td>สำเร็จ</td></tr>
+  </tbody>
+</table>
+
+<h3>5.2 Non-Functional Requirements</h3>
+<ul>
+  <li><strong>NFR-01 ใช้งานง่าย:</strong> หน้าจอเรียบง่าย แบ่งสัดส่วนชัดเจน เหมาะกับผู้ใช้ทั่วไป</li>
+  <li><strong>NFR-02 รองรับมือถือ (Responsive):</strong> แสดงผลได้ดีทั้งบนหน้าจอคอมพิวเตอร์ แท็บเล็ต และสมาร์ตโฟน</li>
+  <li><strong>NFR-03 ความเร็ว:</strong> การเพิ่ม แก้ไข ลบ ค้นหา และอัปเดตกราฟทำงานทันทีแบบไม่ต้องโหลดหน้าใหม่</li>
+  <li><strong>NFR-04 ความถูกต้อง:</strong> คำนวณยอดรวมรายรับ รายจ่าย และยอดคงเหลือได้อย่างแม่นยำ</li>
+  <li><strong>NFR-06 ความเป็นส่วนตัว:</strong> รูปสลิปและข้อมูลถูกเก็บไว้ในเบราว์เซอร์ของผู้ใช้เท่านั้น ไม่ถูกนำไปเผยแพร่</li>
+  <li><strong>NFR-07 ดูแลโค้ดง่าย:</strong> แบ่งโครงสร้างไฟล์ชัดเจนเป็น <code>index.html</code>, <code>css/style.css</code>, <code>js/data.js</code>, <code>js/chart-manager.js</code> และ <code>js/app.js</code></li>
+</ul>
+
+<h2>6. การออกแบบฐานข้อมูลและกฎการแนะนำหมวดหมู่ (Data Model & Rules)</h2>
+<h3>6.1 โครงสร้างข้อมูล Transaction</h3>
+<table>
+  <thead>
+    <tr><th>Field</th><th>รายละเอียด</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>id</code></td><td>รหัสรายการธุรกรรมอ้างอิงเฉพาะ</td></tr>
+    <tr><td><code>type</code></td><td>ประเภทธุรกรรม (<code>income</code> = รายรับ, <code>expense</code> = รายจ่าย)</td></tr>
+    <tr><td><code>amount</code></td><td>จำนวนเงิน (บาท)</td></tr>
+    <tr><td><code>category</code></td><td>หมวดหมู่ค่าใช้จ่ายหรือรายรับ</td></tr>
+    <tr><td><code>transaction_date</code></td><td>วันที่ทำรายการ (YYYY-MM-DD)</td></tr>
+    <tr><td><code>description</code></td><td>รายละเอียดรายการ</td></tr>
+    <tr><td><code>merchant</code></td><td>ร้านค้า ผู้รับเงิน หรือแหล่งที่มาของรายรับ</td></tr>
+    <tr><td><code>payment_method</code></td><td>วิธีการชำระเงิน เช่น โอนเงิน/สแกน QR, พร้อมเพย์, เงินสด, e-Wallet</td></tr>
+    <tr><td><code>slip_image_url</code></td><td>ข้อมูลรูปภาพสลิป (Base64 / SVG Data URL)</td></tr>
+    <tr><td><code>created_at</code></td><td>วันและเวลาที่บันทึกข้อมูล</td></tr>
+  </tbody>
+</table>
+
+<h3>6.2 หมวดหมู่เริ่มต้นและตารางคำสำคัญ (Rule-Based Keyword Table)</h3>
+<table>
+  <thead>
+    <tr><th>คำสำคัญที่พบ (Keywords)</th><th>หมวดหมู่ที่ระบบแนะนำ</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>7-Eleven, Lotus, Big C, Cafe, Food, เซเว่น, โลตัส, กาแฟ, ข้าว</td><td>อาหารและเครื่องดื่ม</td></tr>
+    <tr><td>Grab, Bolt, Bus, Taxi, Fuel, Gas, BTS, MRT, น้ำมัน</td><td>เดินทาง</td></tr>
+    <tr><td>Book, Course, Tuition, Stationery, B2S, หนังสือ, คอร์ส, เครื่องเขียน</td><td>การเรียน</td></tr>
+    <tr><td>Shopee, Lazada, Shopping, Mall, ช้อปปิ้ง, เสื้อผ้า</td><td>ช้อปปิ้ง</td></tr>
+    <tr><td>Electric, Water, Internet, Phone, AIS, True, ค่าไฟ, ค่าน้ำ, ค่าเน็ต</td><td>บิลและค่าสาธารณูปโภค</td></tr>
+    <tr><td>Hospital, Clinic, Medicine, Watsons, โรงพยาบาล, คลินิก, ยา</td><td>สุขภาพ</td></tr>
+    <tr><td>Movie, Game, Music, Netflix, Spotify, ดูหนัง, เกม</td><td>ความบันเทิง</td></tr>
+  </tbody>
+</table>
+
+<h2>7. ขั้นตอนการทำงานของระบบ (System Workflows)</h2>
+<h3>7.1 การเพิ่มรายการแบบกรอกเอง</h3>
+<ol>
+  <li>ผู้ใช้กดปุ่มหรือเมนู “เพิ่มรายการ (กรอกเอง)”</li>
+  <li>ผู้ใช้เลือกประเภท รายจ่าย หรือ รายรับ</li>
+  <li>ผู้ใช้กรอกจำนวนเงิน วันที่ ชื่อร้านค้า หมวดหมู่ และรายละเอียด</li>
+  <li>ระบบตรวจสอบข้อมูลที่จำเป็นและแนะนำหมวดหมู่อัตโนมัติจากคำสำคัญ</li>
+  <li>ระบบบันทึกรายการลงฐานข้อมูล LocalStorage</li>
+  <li>ระบบอัปเดตตัวเลขบน Dashboard และวาดกราฟสรุปผลใหม่ทันที</li>
+</ol>
+
+<h3>7.2 การเพิ่มรายการจากสลิป</h3>
+<ol>
+  <li>ผู้ใช้กดเมนู “อัปโหลดสลิปค่าใช้จ่าย”</li>
+  <li>ผู้ใช้เลือกรูปภาพสลิปจากอุปกรณ์ (หรือกดปุ่มเลือกสลิปตัวอย่าง)</li>
+  <li>ระบบย่อขนาดภาพด้วย Canvas และแสดงตัวอย่างรูปภาพสลิปบนหน้าจอ</li>
+  <li>ผู้ใช้กรอกจำนวนเงิน วันที่ ร้านค้า/ผู้รับเงิน และรายละเอียดจากสลิป</li>
+  <li>ระบบตรวจจับคำสำคัญจากชื่อร้านค้าหรือรายละเอียดแล้วเลือกหมวดหมู่ให้อัตโนมัติ</li>
+  <li>ผู้ใช้ตรวจสอบความถูกต้องและกดบันทึกข้อมูลพร้อมรูปภาพสลิป</li>
+  <li>ระบบอัปเดต Dashboard และกราฟสรุปผลทันที</li>
+</ol>
+
+<h2>8. เทคโนโลยีที่ใช้พัฒนา (Technology Stack)</h2>
+<ul>
+  <li><strong>Frontend:</strong> HTML5, CSS3 (Responsive Grid/Flexbox & CSS Variables), Vanilla JavaScript (ES6+)</li>
+  <li><strong>Data & Image Storage:</strong> Browser LocalStorage ร่วมกับ HTML5 Canvas Image Compression</li>
+  <li><strong>Data Visualization (Chart):</strong> Chart.js (Doughnut/Pie Chart และ Bar Chart)</li>
+  <li><strong>Deployment:</strong> GitHub Pages</li>
+</ul>
+
+<h2>9. สรุปการใช้เครื่องมือ AI ในการพัฒนา (AI Tools Usage Summary)</h2>
+<p>โปรเจกต์นี้ได้ประยุกต์ใช้เครื่องมือ AI (<strong>Antigravity AI Coding Assistant</strong>) ช่วยในขั้นตอนต่าง ๆ ดังนี้:</p>
+<ol>
+  <li><strong>ช่วยออกแบบโครงสร้างโปรเจกต์และ Data Schema:</strong> แยกโค้ดออกเป็นโมดูลอย่างชัดเจน ได้แก่ <code>index.html</code> (โครงสร้างหน้าจอ), <code>css/style.css</code> (การตกแต่งและ Responsive UI), <code>js/data.js</code> (การจัดการข้อมูลและกฎแนะนำหมวดหมู่), <code>js/chart-manager.js</code> (การวาดกราฟ) และ <code>js/app.js</code> (ลอจิกควบคุมหลัก)</li>
+  <li><strong>ช่วยเขียนฟังก์ชัน CRUD และการจัดการรูปภาพสลิป:</strong> สร้าง <code>DataService</code> สำหรับเพิ่ม อ่าน แก้ไข และลบรายการใน LocalStorage รวมถึงฟังก์ชันบีบอัดรูปสลิปด้วย Canvas</li>
+  <li><strong>ช่วยสร้าง Logic แนะนำหมวดหมู่แบบ Rule-Based:</strong> พัฒนาฟังก์ชัน <code>suggestCategoryByKeyword()</code> เพื่อจับคู่คำสำคัญทั้งภาษาไทยและภาษาอังกฤษเข้ากับหมวดหมู่เริ่มต้น</li>
+  <li><strong>ช่วยสร้าง Sample Data สำหรับทดสอบระบบ:</strong> สร้างข้อมูลตัวอย่างเริ่มต้นพร้อมรูปสลิปจำลองรูปแบบ SVG เพื่อให้ทดสอบระบบได้ทันที</li>
+  <li><strong>ช่วยตรวจสอบแก้ไขข้อผิดพลาด (Debug) และจัดทำเอกสาร:</strong> ตรวจสอบลำดับการทำงานของ JavaScript และจัดทำคู่มือ <code>README.md</code> พร้อมรายงานฉบับสมบูรณ์</li>
+</ol>
+
+</body>
+</html>
