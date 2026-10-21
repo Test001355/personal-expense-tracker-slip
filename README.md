@@ -2,6 +2,9 @@
 
 ระบบเว็บแอปพลิเคชันสำหรับบันทึกและติดตามรายรับ–รายจ่ายส่วนบุคคล พร้อมฟีเจอร์อัปโหลดรูปภาพสลิปโอนเงิน/ใบเสร็จเพื่อช่วยบันทึกค่าใช้จ่าย แนะนำหมวดหมู่แบบอัตโนมัติจากคำสำคัญ (Rule-Based Keyword Matching) และแสดงผล Dashboard สรุปยอดพร้อมกราฟแยกตามหมวดหมู่
 
+- **GitHub Repository:** https://github.com/Test001355/personal-expense-tracker-slip
+- **Demo URL (GitHub Pages):** https://test001355.github.io/personal-expense-tracker-slip/
+
 ---
 
 ## 1. ฟีเจอร์หลักของระบบ (Key Features)
@@ -55,7 +58,7 @@ Personal Expense Tracker Web App/
 ### วิธีที่ 1: เปิดใช้งานได้ทันทีผ่านเว็บเบราว์เซอร์
 1. ดาวน์โหลดหรือ Clone โปรเจกต์จาก GitHub Repository:
    ```bash
-   git clone <GITHUB_REPO_URL>
+   git clone https://github.com/Test001355/personal-expense-tracker-slip.git
    cd "Personal Expense Tracker Web App"
    ```
 2. เปิดไฟล์ `index.html` ด้วยเว็บเบราว์เซอร์ (Google Chrome, Microsoft Edge, Firefox, Safari) ได้ทันที
