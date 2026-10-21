@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SlipTrack — ระบบบันทึกรายรับ–รายจ่ายส่วนบุคคล พร้อมอัปโหลดสลิป</title>
+  <!-- Google Fonts: Prompt & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Remix Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Sidebar / Mobile Navigation -->
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-logo">
+          <i class="ri-receipt-line"></i>
+        </div>
+        <div class="brand-text">
+          <h1>SlipTrack</h1>
+          <span>Personal Expense Tracker</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-item active" data-page="dashboard">
+          <i class="ri-pie-chart-2-line"></i>
+          <span>Dashboard สรุปผล</span>
+        </button>
+        <button class="nav-item" data-page="transactions">
+          <i class="ri-file-list-3-line"></i>
+          <span>รายการธุรกรรมทั้งหมด</span>
+        </button>
+        <button class="nav-item" data-page="add-transaction">
+          <i class="ri-add-circle-line"></i>
+          <span>เพิ่มรายการ (กรอกเอง)</span>
+        </button>
+        <button class="nav-item" data-page="upload-slip">
+          <i class="ri-image-add-line"></i>
+          <span>อัปโหลดสลิปค่าใช้จ่าย</span>
+          <span class="nav-badge">Highlight</span>
+        </button>
+        <button class="nav-item" data-page="categories">
+          <i class="ri-price-tag-3-line"></i>
+          <span>หมวดหมู่ & กฎแนะนำ</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="budget-mini-card">
+          <div class="budget-mini-header">
+            <span>งบรายจ่ายเดือนนี้</span>
+            <button id="btnEditBudget" class="icon-btn-sm" title="ตั้งงบประมาณ"><i class="ri-settings-4-line"></i></button>
+          </div>
+          <div class="budget-mini-amount" id="budgetStatusText">฿0 / ฿10,000</div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="budgetProgressBar" style="width: 0%"></div>
+          </div>
+          <small id="budgetAlertText" class="budget-alert-text"></small>
+        </div>
+
+        <div class="sidebar-actions">
+          <button class="btn btn-outline btn-sm" id="btnToggleTheme">
+            <i class="ri-moon-line" id="themeIcon"></i>
+            <span>โหมดมืด/สว่าง</span>
+          </button>
+          <button class="btn btn-outline btn-sm" id="btnResetSample">
+            <i class="ri-refresh-line"></i>
+            <span>ข้อมูลตัวอย่าง</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Header -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="btnMobileMenu">
+            <i class="ri-menu-2-line"></i>
+          </button>
+          <div>
+            <h2 id="pageTitle">Dashboard สรุปภาพรวม</h2>
+            <p class="page-subtitle" id="pageSubtitle">ติดตามรายรับ–รายจ่ายส่วนบุคคลและหลักฐานสลิปโอนเงิน</p>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="btn btn-secondary" id="btnExportCSV">
+            <i class="ri-download-2-line"></i>
+            <span>Export CSV</span>
+          </button>
+          <button class="btn btn-primary" data-goto="upload-slip">
+            <i class="ri-qr-scan-2-line"></i>
+            <span>อัปโหลดสลิป</span>
+          </button>
+          <button class="btn btn-accent" data-goto="add-transaction">
+            <i class="ri-add-line"></i>
+            <span>เพิ่มรายการ</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- ==================== PAGE 1: DASHBOARD ==================== -->
+      <section class="page-section active" id="page-dashboard">
+        <!-- Summary Cards (FR-09) -->
+        <div class="summary-grid">
+          <div class="summary-card income-card">
+            <div class="summary-icon">
+              <i class="ri-arrow-left-down-line"></i>
+            </div>
+            <div class="summary-info">
+              <span class="summary-label">ยอดรวมรายรับ (Income)</span>
+              <h3 class="summary-value" id="totalIncomeDisplay">฿0.00</h3>
+              <span class="summary-meta" id="incomeCountDisplay">0 รายการ</span>
+            </div>
+          </div>
+
+          <div class="summary-card expense-card">
+            <div class="summary-icon">
+              <i class="ri-arrow-right-up-line"></i>
+            </div>
+            <div class="summary-info">
+              <span class="summary-label">ยอดรวมรายจ่าย (Expense)</span>
+              <h3 class="summary-value" id="totalExpenseDisplay">฿0.00</h3>
+              <span class="summary-meta" id="expenseCountDisplay">0 รายการ</span>
+            </div>
+          </div>
+
+          <div class="summary-card balance-card">
+            <div class="summary-icon">
+              <i class="ri-wallet-3-line"></i>
+            </div>
+            <div class="summary-info">
+              <span class="summary-label">ยอดคงเหลือสุทธิ (Balance)</span>
+              <h3 class="summary-value" id="netBalanceDisplay">฿0.00</h3>
+              <span class="summary-meta" id="slipCountDisplay">แนบสลิป 0 รายการ</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Row (FR-10) -->
+        <div class="charts-grid">
+          <div class="card chart-card">
+            <div class="card-header">
+              <div>
+                <h3>สัดส่วนรายจ่ายตามหมวดหมู่ (Pie Chart)</h3>
+                <p>วิเคราะห์หมวดหมู่ที่ใช้จ่ายมากที่สุด</p>
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="expensePieChart"></canvas>
+            </div>
+          </div>
+
+          <div class="card chart-card">
+            <div class="card-header">
+              <div>
+                <h3>เปรียบเทียบรายจ่ายแต่ละหมวดหมู่ (Bar Chart)</h3>
+                <p>ยอดรวมค่าใช้จ่ายแยกตามหมวดหมู่ (บาท)</p>
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="expenseBarChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Transactions on Dashboard -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>รายการธุรกรรมล่าสุด</h3>
+              <p>แสดง 5 รายการล่าสุดที่บันทึกในระบบ</p>
+            </div>
+            <button class="btn btn-outline btn-sm" data-goto="transactions">
+              ดูทั้งหมด <i class="ri-arrow-right-s-line"></i>
+            </button>
+          </div>
+          <div class="table-responsive">
+            <table class="transaction-table">
+              <thead>
+                <tr>
+                  <th>วันที่</th>
+                  <th>ร้านค้า / รายละเอียด</th>
+                  <th>หมวดหมู่</th>
+                  <th>วิธีชำระเงิน</th>
+                  <th>สลิป</th>
+                  <th class="text-right">จำนวนเงิน</th>
+                  <th class="text-center">จัดการ</th>
+                </tr>
+              </thead>
+              <tbody id="recentTransactionsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== PAGE 2: TRANSACTION LIST (FR-06, FR-07) ==================== -->
+      <section class="page-section" id="page-transactions">
+        <div class="card filter-card">
+          <div class="filter-grid">
+            <div class="form-group">
+              <label for="searchKeyword"><i class="ri-search-line"></i> ค้นหาคำสำคัญ</label>
+              <input type="text" id="searchKeyword" class="form-control" placeholder="ค้นหาชื่อร้านค้า, รายละเอียด, 7-Eleven, Grab..." />
+            </div>
+
+            <div class="form-group">
+              <label for="filterType"><i class="ri-Filter-3-line"></i> ประเภทธุรกรรม</label>
+              <select id="filterType" class="form-control">
+                <option value="all">ทั้งหมด (รายรับ & รายจ่าย)</option>
+                <option value="expense">รายจ่าย (Expense)</option>
+                <option value="income">รายรับ (Income)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="filterCategory"><i class="ri-price-tag-3-line"></i> หมวดหมู่</label>
+              <select id="filterCategory" class="form-control">
+                <option value="all">ทุกหมวดหมู่</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="filterDateFrom"><i class="ri-calendar-line"></i> ตั้งแต่วันที่</label>
+              <input type="date" id="filterDateFrom" class="form-control" />
+            </div>
+
+            <div class="form-group">
+              <label for="filterDateTo"><i class="ri-calendar-check-line"></i> ถึงวันที่</label>
+              <input type="date" id="filterDateTo" class="form-control" />
+            </div>
+
+            <div class="form-group filter-actions">
+              <button class="btn btn-outline" id="btnResetFilters">
+                <i class="ri-Restart-line"></i> ล้างตัวกรอง
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>รายการธุรกรรมทั้งหมด (<span id="filteredCount">0</span> รายการ)</h3>
+              <p id="filteredSummaryText">ยอดรวมรายการที่แสดง: ฿0.00</p>
+            </div>
+            <div class="view-switcher">
+              <button class="btn-view active" id="btnViewTable" title="มุมมองตาราง"><i class="ri-table-line"></i></button>
+              <button class="btn-view" id="btnViewCards" title="มุมมองการ์ด"><i class="ri-grid-fill"></i></button>
+            </div>
+          </div>
+
+          <!-- Table View -->
+          <div class="table-responsive" id="transactionsTableView">
+            <table class="transaction-table">
+              <thead>
+                <tr>
+                  <th>วันที่</th>
+                  <th>ประเภท</th>
+                  <th>ร้านค้า / แหล่งที่มา</th>
+                  <th>รายละเอียด</th>
+                  <th>หมวดหมู่</th>
+                  <th>วิธีชำระเงิน</th>
+                  <th>หลักฐานสลิป</th>
+                  <th class="text-right">จำนวนเงิน</th>
+                  <th class="text-center">จัดการ</th>
+                </tr>
+              </thead>
+              <tbody id="allTransactionsBody"></tbody>
+            </table>
+          </div>
+
+          <!-- Card Grid View -->
+          <div class="transaction-cards-grid hidden" id="transactionsCardView"></div>
+        </div>
+      </section>
+
+      <!-- ==================== PAGE 3: ADD TRANSACTION MANUALLY (FR-01, FR-08) ==================== -->
+      <section class="page-section" id="page-add-transaction">
+        <div class="form-page-container">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3><i class="ri-edit-box-line"></i> เพิ่มรายการรายรับ–รายจ่าย (กรอกข้อมูลด้วยตนเอง)</h3>
+                <p>กรอกข้อมูลธุรกรรม ระบบจะช่วยแนะนำหมวดหมู่อัตโนมัติจากชื่อร้านค้าหรือรายละเอียด</p>
+              </div>
+            </div>
+
+            <form id="manualTransactionForm" class="transaction-form">
+              <div class="type-selector">
+                <label class="type-option">
+                  <input type="radio" name="manual_type" value="expense" checked />
+                  <span class="type-box expense-box">
+                    <i class="ri-arrow-right-up-line"></i> รายจ่าย (Expense)
+                  </span>
+                </label>
+                <label class="type-option">
+                  <input type="radio" name="manual_type" value="income" />
+                  <span class="type-box income-box">
+                    <i class="ri-arrow-left-down-line"></i> รายรับ (Income)
+                  </span>
+                </label>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="manualAmount">จำนวนเงิน (บาท) <span class="required">*</span></label>
+                  <input type="number" id="manualAmount" class="form-control form-control-lg" placeholder="0.00" step="0.01" min="0.01" required />
+                </div>
+
+                <div class="form-group">
+                  <label for="manualDate">วันที่ทำรายการ <span class="required">*</span></label>
+                  <input type="date" id="manualDate" class="form-control form-control-lg" required />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="manualMerchant">ร้านค้า / ผู้รับเงิน / แหล่งที่มา <span class="required">*</span></label>
+                  <input type="text" id="manualMerchant" class="form-control" placeholder="เช่น 7-Eleven, Grab, Shopee, เงินเดือน..." required />
+                  <div id="manualSuggestionBadge" class="suggestion-pill hidden">
+                    <i class="ri-sparkling-fill"></i> แนะนำหมวดหมู่: <strong id="manualSuggestedCatText"></strong>
+                    <button type="button" class="btn-apply-suggestion" id="btnApplyManualSuggestion">ใช้หมวดหมู่นี้</button>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="manualCategory">หมวดหมู่ <span class="required">*</span></label>
+                  <select id="manualCategory" class="form-control" required></select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="manualPaymentMethod">วิธีการชำระเงิน</label>
+                  <select id="manualPaymentMethod" class="form-control">
+                    <option value="โอนเงิน / สแกน QR">โอนเงิน / สแกน QR</option>
+                    <option value="พร้อมเพย์ (PromptPay)">พร้อมเพย์ (PromptPay)</option>
+                    <option value="เงินสด (Cash)">เงินสด (Cash)</option>
+                    <option value="e-Wallet (TrueMoney / ShopeePay)">e-Wallet (TrueMoney / ShopeePay)</option>
+                    <option value="บัตรเครดิต / เดบิต">บัตรเครดิต / เดบิต</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="manualSlipInput">แนบรูปสลิปประกอบ (ถ้ามี)</label>
+                  <input type="file" id="manualSlipInput" class="form-control" accept="image/*" />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="manualDescription">รายละเอียดเพิ่มเติม</label>
+                <textarea id="manualDescription" class="form-control" rows="3" placeholder="ระบุรายละเอียด เช่น ข้าวกล่องและกาแฟ, ค่าเดินทางไปมหาวิทยาลัย..."></textarea>
+              </div>
+
+              <div id="manualSlipPreviewWrap" class="slip-mini-preview hidden">
+                <img id="manualSlipPreviewImg" src="" alt="ตัวอย่างสลิป" />
+                <button type="button" class="btn btn-danger btn-sm" id="btnRemoveManualSlip">ลบรูปสลิป</button>
+              </div>
+
+              <div class="form-actions">
+                <button type="reset" class="btn btn-outline">ล้างฟอร์ม</button>
+                <button type="submit" class="btn btn-primary btn-lg">
+                  <i class="ri-save-3-line"></i> บันทึกรายการ
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== PAGE 4: UPLOAD SLIP PAGE (FR-02, FR-03, FR-08) ==================== -->
+      <section class="page-section" id="page-upload-slip">
+        <div class="slip-workflow-grid">
+          <!-- Left Column: Upload & Slip Image Preview -->
+          <div class="card slip-upload-card">
+            <div class="card-header">
+              <div>
+                <h3><i class="ri-image-add-line"></i> 1. อัปโหลดรูปภาพสลิป</h3>
+                <p>เลือกรูปสลิปโอนเงินหรือใบเสร็จเพื่อดูตัวอย่างและกรอกข้อมูล</p>
+              </div>
+            </div>
+
+            <div class="upload-dropzone" id="slipDropzone">
+              <input type="file" id="slipFileInput" accept="image/*" hidden />
+              <div class="dropzone-placeholder" id="dropzonePlaceholder">
+                <div class="upload-icon-circle">
+                  <i class="ri-upload-cloud-2-line"></i>
+                </div>
+                <h4>คลิกเพื่อเลือกรูปสลิป หรือลากไฟล์มาวางที่นี่</h4>
+                <p>รองรับไฟล์ JPG, PNG, WEBP (จัดเก็บในระบบพร้อมรายการธุรกรรม)</p>
+                <div class="sample-slip-buttons">
+                  <span>หรือทดลองสร้างสลิปตัวอย่างทันที:</span>
+                  <div class="sample-pill-group">
+                    <button type="button" class="btn-sample-slip" data-Preset="7eleven">🧾 สลิป 7-Eleven (฿85)</button>
+                    <button type="button" class="btn-sample-slip" data-Preset="grab">🚕 สลิป GrabTransport (฿140)</button>
+                    <button type="button" class="btn-sample-slip" data-Preset="shopee">🛍️ สลิป Shopee (฿459)</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="slip-preview-container hidden" id="slipPreviewContainer">
+                <img id="slipPreviewImage" src="" alt="Slip Preview" />
+                <div class="slip-preview-toolbar">
+                  <button type="button" class="btn btn-secondary btn-sm" id="btnChangeSlip">
+                    <i class="ri-image-edit-line"></i> เปลี่ยนรูปสลิป
+                  </button>
+                  <button type="button" class="btn btn-danger btn-sm" id="btnClearSlip">
+                    <i class="ri-delete-bin-line"></i> ลบรูป
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Slip Data Form -->
+          <div class="card slip-form-card">
+            <div class="card-header">
+              <div>
+                <h3><i class="ri-file-edit-line"></i> 2. กรอกข้อมูลจากสลิป</h3>
+                <p>ดูรูปสลิปด้านซ้ายแล้วกรอกข้อมูล ระบบจะแนะนำหมวดหมู่ให้อัตโนมัติ</p>
+              </div>
+            </div>
+
+            <form id="slipTransactionForm" class="transaction-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="slipMerchant">ชื่อร้านค้า / ผู้รับเงินในสลิป <span class="required">*</span></label>
+                  <input type="text" id="slipMerchant" class="form-control" placeholder="พิมพ์ชื่อผู้รับเงิน เช่น 7-Eleven, Grab, Cafe Amazon..." required />
+                </div>
+
+                <div class="form-group">
+                  <label for="slipAmount">จำนวนเงินตามสลิป (บาท) <span class="required">*</span></label>
+                  <input type="number" id="slipAmount" class="form-control" placeholder="0.00" step="0.01" min="0.01" required />
+                </div>
+              </div>
+
+              <!-- Smart Rule-based Category Banner -->
+              <div class="rule-suggestion-banner" id="slipSuggestionBanner">
+                <div class="rule-banner-icon">
+                  <i class="ri-lightbulb-flash-line"></i>
+                </div>
+                <div class="rule-banner-content">
+                  <span class="rule-banner-title">ระบบแนะนำหมวดหมู่ (Rule-Based Keyword Matching)</span>
+                  <p id="slipSuggestionText">พิมพ์ชื่อร้านค้าหรือคำสำคัญ เช่น <code>7-Eleven</code>, <code>Grab</code>, <code>Shopee</code>, <code>Electric</code> เพื่อให้ระบบแนะนำหมวดหมู่อัตโนมัติ</p>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="slipCategory">หมวดหมู่ค่าใช้จ่าย <span class="required">*</span></label>
+                  <select id="slipCategory" class="form-control" required></select>
+                </div>
+
+                <div class="form-group">
+                  <label for="slipDate">วันที่ในสลิป <span class="required">*</span></label>
+                  <input type="date" id="slipDate" class="form-control" required />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="slipType">ประเภทธุรกรรม</label>
+                  <select id="slipType" class="form-control">
+                    <option value="expense" selected>รายจ่าย (สลิปโอนเงิน/จ่ายเงิน)</option>
+                    <option value="income">รายรับ (สลิปรับเงินโอน)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="slipPaymentMethod">ช่องทางในสลิป</label>
+                  <select id="slipPaymentMethod" class="form-control">
+                    <option value="โอนเงิน / สแกน QR" selected>โอนเงิน / สแกน QR</option>
+                    <option value="พร้อมเพย์ (PromptPay)">พร้อมเพย์ (PromptPay)</option>
+                    <option value="e-Wallet (TrueMoney / ShopeePay)">e-Wallet (TrueMoney / ShopeePay)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="slipDescription">บันทึกช่วยจำ / รายละเอียดรายการ</label>
+                <textarea id="slipDescription" class="form-control" rows="2" placeholder="ระบุรายละเอียดเพิ่มเติมจากสลิป..."></textarea>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary btn-lg btn-block">
+                  <i class="ri-check-double-line"></i> บันทึกข้อมูลพร้อมรูปภาพสลิป
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== PAGE 5: CATEGORIES & RULE ENGINE (Section 10.2, 11, 12) ==================== -->
+      <section class="page-section" id="page-categories">
+        <div class="charts-grid">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3>หมวดหมู่ค่าใช้จ่ายและรายรับ (Categories)</h3>
+                <p>จัดการหมวดหมู่เริ่มต้นและเพิ่มหมวดหมู่ใหม่ได้ (Admin / User)</p>
+              </div>
+            </div>
+            <form id="addCategoryForm" class="inline-add-form">
+              <input type="text" id="newCatName" class="form-control" placeholder="ชื่อหมวดหมู่ใหม่..." required />
+              <select id="newCatType" class="form-control">
+                <option value="expense">รายจ่าย (Expense)</option>
+                <option value="income">รายรับ (Income)</option>
+              </select>
+              <button type="submit" class="btn btn-primary">
+                <i class="ri-add-line"></i> เพิ่มหมวดหมู่
+              </button>
+            </form>
+            <div class="category-list" id="categoryListContainer"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3>ตารางกฎแนะนำหมวดหมู่แบบง่าย (Rule-Based Keyword Table)</h3>
+                <p>อ้างอิงตามข้อกำหนด SRS หัวข้อที่ 12 ระบบจะตรวจจับคำสำคัญและเลือกหมวดหมู่ให้อัตโนมัติ</p>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="transaction-table">
+                <thead>
+                  <tr>
+                    <th>คำสำคัญที่พบ (Keywords)</th>
+                    <th>หมวดหมู่ที่ระบบแนะนำ</th>
+                  </tr>
+                </thead>
+                <tbody id="keywordRulesTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ==================== MODAL: TRANSACTION DETAIL & EDIT (FR-04, FR-05, Section 14.5) ==================== -->
+  <div class="modal-backdrop hidden" id="transactionModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">รายละเอียดและแก้ไขรายการธุรกรรม</h3>
+        <button class="modal-close" id="btnCloseModal"><i class="ri-close-line"></i></button>
+      </div>
+      <div class="modal-body">
+        <form id="editTransactionForm">
+          <input type="hidden" id="editId" />
+          <div class="modal-grid">
+            <div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="editType">ประเภท</label>
+                  <select id="editType" class="form-control" required>
+                    <option value="expense">รายจ่าย (Expense)</option>
+                    <option value="income">รายรับ (Income)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="editAmount">จำนวนเงิน (บาท)</label>
+                  <input type="number" id="editAmount" class="form-control" step="0.01" min="0.01" required />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="editMerchant">ร้านค้า / ผู้รับเงิน</label>
+                  <input type="text" id="editMerchant" class="form-control" required />
+                </div>
+                <div class="form-group">
+                  <label for="editCategory">หมวดหมู่</label>
+                  <select id="editCategory" class="form-control" required></select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="editDate">วันที่ทำรายการ</label>
+                  <input type="date" id="editDate" class="form-control" required />
+                </div>
+                <div class="form-group">
+                  <label for="editPaymentMethod">วิธีชำระเงิน</label>
+                  <input type="text" id="editPaymentMethod" class="form-control" />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="editDescription">รายละเอียดรายการ</label>
+                <textarea id="editDescription" class="form-control" rows="3"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="editSlipFile">อัปเดตรูปภาพสลิปใหม่ (ถ้าต้องการเปลี่ยน)</label>
+                <input type="file" id="editSlipFile" class="form-control" accept="image/*" />
+              </div>
+            </div>
+
+            <div class="modal-slip-preview">
+              <label>รูปภาพสลิปที่แนบไว้</label>
+              <div id="editSlipContainer" class="modal-slip-box">
+                <img id="editSlipImage" src="" alt="Slip" class="hidden" />
+                <div id="editNoSlipText" class="no-slip-placeholder">
+                  <i class="ri-image-line"></i>
+                  <span>ไม่มีรูปสลิปแนบในรายการนี้</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" id="btnDeleteFromModal">
+              <i class="ri-delete-bin-line"></i> ลบรายการนี้
+            </button>
+            <div class="modal-footer-right">
+              <button type="button" class="btn btn-outline" id="btnCancelModal">ยกเลิก</button>
+              <button type="submit" class="btn btn-primary">
+                <i class="ri-save-line"></i> บันทึกการแก้ไข
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/chart-manager.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
