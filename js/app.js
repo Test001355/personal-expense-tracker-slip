@@ -39,21 +39,18 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('manualDate').value = todayStr;
   document.getElementById('slipDate').value = todayStr;
 
-  // Initialize Theme
-  initTheme();
-
-  // Populate Categories & Rules UI
-  populateCategorySelects();
-  renderCategoriesAndRulesPage();
-
-  // Render All Views
-  refreshAllViews();
-
-  // ==================== NAVIGATION ====================
+  // DOM Elements for Navigation & Search/Filter (Declared before initial render)
   const navButtons = document.querySelectorAll('.nav-item');
   const pageSections = document.querySelectorAll('.page-section');
   const sidebar = document.getElementById('sidebar');
 
+  const searchInput = document.getElementById('searchKeyword');
+  const filterType = document.getElementById('filterType');
+  const filterCategory = document.getElementById('filterCategory');
+  const filterDateFrom = document.getElementById('filterDateFrom');
+  const filterDateTo = document.getElementById('filterDateTo');
+
+  // ==================== NAVIGATION ====================
   function navigateTo(pageId) {
     navButtons.forEach((btn) => {
       btn.classList.toggle('active', btn.dataset.page === pageId);
@@ -279,12 +276,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==================== SEARCH & FILTER (FR-06, FR-07) ====================
-  const searchInput = document.getElementById('searchKeyword');
-  const filterType = document.getElementById('filterType');
-  const filterCategory = document.getElementById('filterCategory');
-  const filterDateFrom = document.getElementById('filterDateFrom');
-  const filterDateTo = document.getElementById('filterDateTo');
-
   [searchInput, filterType, filterCategory, filterDateFrom, filterDateTo].forEach((el) => {
     el.addEventListener('input', applyFiltersAndRender);
     el.addEventListener('change', applyFiltersAndRender);
@@ -884,4 +875,10 @@ document.addEventListener('DOMContentLoaded', () => {
       reader.readAsDataURL(file);
     });
   }
+
+  // ==================== INITIALIZE APPLICATION ====================
+  initTheme();
+  populateCategorySelects();
+  renderCategoriesAndRulesPage();
+  refreshAllViews();
 });
